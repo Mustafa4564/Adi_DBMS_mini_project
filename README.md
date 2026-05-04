@@ -1,0 +1,1 @@
+# Adi_DBMS_mini_project
