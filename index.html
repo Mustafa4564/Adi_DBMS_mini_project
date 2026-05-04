@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎬 Movie Ticket Booking System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a2e;
+            --secondary: #16213e;
+            --accent: #e94560;
+            --accent-light: #ff6b6b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --bg: #0f1419;
+            --surface: #1a1f2e;
+            --border: #2a2f3f;
+            --text: #e0e0e0;
+            --text-secondary: #a0a0a0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1a1f2e 100%);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 1.5rem;
+            border-bottom: 2px solid var(--accent);
+            box-shadow: 0 4px 20px rgba(233, 69, 96, 0.2);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(233, 69, 96, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 2px solid var(--accent);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.875rem;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .tab-btn:hover,
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .movie-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(233, 69, 96, 0.2);
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+        }
+
+        .movie-info {
+            padding: 1.5rem;
+        }
+
+        .movie-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--accent);
+        }
+
+        .movie-details {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .rating {
+            color: var(--warning);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .shows-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .shows-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .show-card {
+            background: var(--primary);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .show-card:hover {
+            border-color: var(--accent);
+            background: var(--secondary);
+        }
+
+        .show-time {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .show-details {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--success);
+            margin-bottom: 1rem;
+        }
+
+        .seat-selection {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .seat-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 0.5rem;
+            margin: 2rem 0;
+            max-width: 600px;
+        }
+
+        .seat {
+            aspect-ratio: 1;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: var(--primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.8rem;
+            transition: all 0.2s ease;
+        }
+
+        .seat:hover:not(.booked) {
+            border-color: var(--accent);
+            background: var(--secondary);
+        }
+
+        .seat.selected {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .seat.booked {
+            background: var(--text-secondary);
+            border-color: var(--text-secondary);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .legend {
+            display: flex;
+            gap: 2rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-box {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            border: 2px solid var(--border);
+        }
+
+        .legend-box.available {
+            background: var(--primary);
+            border-color: var(--border);
+        }
+
+        .legend-box.selected {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .legend-box.booked {
+            background: var(--text-secondary);
+            border-color: var(--text-secondary);
+        }
+
+        .booking-summary {
+            background: var(--primary);
+            border: 2px solid var(--accent);
+            border-radius: 12px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 1rem 0;
+            font-size: 1.1rem;
+        }
+
+        .summary-total {
+            border-top: 2px solid var(--border);
+            padding-top: 1rem;
+            margin-top: 1rem;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--primary);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.1);
+        }
+
+        .rating-stars {
+            display: flex;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .star {
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.2s ease;
+        }
+
+        .star:hover,
+        .star.active {
+            color: var(--warning);
+            transform: scale(1.2);
+        }
+
+        .bookings-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .booking-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .booking-details {
+            display: grid;
+            gap: 0.5rem;
+        }
+
+        .booking-header {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .booking-info {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-btn:hover {
+            color: var(--accent);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            animation: slideIn 0.3s ease;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 2px solid var(--success);
+            color: var(--success);
+        }
+
+        .alert-error {
+            background: rgba(220, 38, 38, 0.1);
+            border: 2px solid #dc2626;
+            color: #fca5a5;
+        }
+
+        .alert-info {
+            background: rgba(59, 130, 246, 0.1);
+            border: 2px solid #3b82f6;
+            color: #93c5fd;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .movies-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+
+            .seat-grid {
+                grid-template-columns: repeat(8, 1fr);
+            }
+
+            .booking-item {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .nav-buttons {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">🎬 MovieTickets</div>
+            <div class="nav-buttons">
+                <button class="tab-btn" data-tab="movies">🎥 Movies</button>
+                <button class="tab-btn" data-tab="my-bookings">🎫 My Bookings</button>
+                <button id="user-info" style="color: var(--text-secondary);">User ID: 1</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Movies Tab -->
+        <div id="movies" class="tab-content active">
+            <h2 style="margin-bottom: 2rem; font-size: 2rem; color: var(--accent);">🎭 Now Showing</h2>
+            <div id="movies-container" class="movies-grid">
+                <div class="loading"><div class="spinner"></div></div>
+            </div>
+        </div>
+
+        <!-- Shows Tab -->
+        <div id="shows" class="tab-content">
+            <button class="btn btn-secondary" onclick="backToMovies()">← Back to Movies</button>
+            <div id="shows-container" style="margin-top: 2rem;"></div>
+        </div>
+
+        <!-- Seat Selection Tab -->
+        <div id="seats" class="tab-content">
+            <button class="btn btn-secondary" onclick="backToShows()">← Back to Shows</button>
+            <div id="seats-container" style="margin-top: 2rem;"></div>
+        </div>
+
+        <!-- My Bookings Tab -->
+        <div id="my-bookings" class="tab-content">
+            <h2 style="margin-bottom: 2rem; font-size: 2rem; color: var(--accent);">🎫 Your Bookings</h2>
+            <div id="bookings-container"></div>
+        </div>
+    </div>
+
+    <!-- Movie Details Modal -->
+    <div id="movie-modal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeMovieModal()">×</button>
+            <div id="movie-modal-content"></div>
+        </div>
+    </div>
+
+    <!-- Feedback Modal -->
+    <div id="feedback-modal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeFeedbackModal()">×</button>
+            <div class="modal-header">Rate This Movie</div>
+            <form onsubmit="submitFeedback(event)">
+                <div class="form-group">
+                    <label>Your Rating</label>
+                    <div class="rating-stars" id="rating-stars"></div>
+                    <input type="hidden" id="rating" value="0">
+                </div>
+                <div class="form-group">
+                    <label>Comments</label>
+                    <textarea id="feedback-comments" rows="4" placeholder="Share your thoughts..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Feedback</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000/api';
+        let currentMovie = null;
+        let currentShow = null;
+        let selectedSeats = [];
+        let userId = 1;
+
+        // API Functions
+        async function api(endpoint, method = 'GET', body = null) {
+            try {
+                const options = {
+                    method,
+                    headers: { 'Content-Type': 'application/json' }
+                };
+                if (body) options.body = JSON.stringify(body);
+                const response = await fetch(`${API_URL}${endpoint}`, options);
+                if (!response.ok) throw new Error(`Error: ${response.statusText}`);
+                return await response.json();
+            } catch (error) {
+                console.error('API Error:', error);
+                showAlert(error.message, 'error');
+                return null;
+            }
+        }
+
+        // Alert Function
+        function showAlert(message, type = 'success') {
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            document.querySelector('.container').insertAdjacentElement('afterbegin', alert);
+            setTimeout(() => alert.remove(), 4000);
+        }
+
+        // Tab Management
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.getAttribute('data-tab');
+                showTab(tab);
+            });
+        });
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+            if (tabName === 'my-bookings') loadBookings();
+        }
+
+        // Load Movies
+        async function loadMovies() {
+            const movies = await api('/movies');
+            if (!movies) return;
+
+            const container = document.getElementById('movies-container');
+            container.innerHTML = movies.map(movie => `
+                <div class="movie-card" onclick="selectMovie(${movie.movie_id})">
+                    <div class="movie-poster">🎬</div>
+                    <div class="movie-info">
+                        <div class="movie-title">${movie.title}</div>
+                        <div class="movie-details">
+                            <div>${movie.genre} • ${movie.language}</div>
+                            <div>${movie.duration} mins</div>
+                        </div>
+                        <div class="rating">⭐ ${movie.rating || 'N/A'}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Select Movie
+        async function selectMovie(movieId) {
+            const movies = await api('/movies');
+            currentMovie = movies.find(m => m.movie_id === movieId);
+
+            const shows = await api(`/shows/${movieId}`);
+            if (!shows || shows.length === 0) {
+                showAlert('No shows available for this movie', 'info');
+                return;
+            }
+
+            showShowsUI(shows);
+        }
+
+        function showShowsUI(shows) {
+            const container = document.getElementById('shows-container');
+            container.innerHTML = `
+                <div class="shows-section">
+                    <h3 style="color: var(--accent); margin-bottom: 1rem;">🎥 ${currentMovie.title}</h3>
+                    <p>${currentMovie.description}</p>
+                    <div class="shows-grid">
+                        ${shows.map(show => `
+                            <div class="show-card" onclick="selectShow(${show.show_id}, ${show.price})">
+                                <div class="show-time">${show.show_time}</div>
+                                <div class="show-details">
+                                    ${show.theater_name}<br>
+                                    ${formatDate(show.show_date)}
+                                </div>
+                                <div class="price">₹${show.price}</div>
+                                <button class="btn btn-primary btn-small" style="width: 100%;">Select</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            showTab('shows');
+        }
+
+        function formatDate(dateStr) {
+            return new Date(dateStr).toLocaleDateString('en-IN', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        // Select Show
+        async function selectShow(showId, price) {
+            currentShow = { show_id: showId, price };
+            const seats = await api(`/seats/${showId}`);
+            if (!seats) return;
+
+            showSeatsUI(seats, price);
+        }
+
+        function showSeatsUI(seats, price) {
+            selectedSeats = [];
+            const rows = {};
+
+            seats.forEach(seat => {
+                const row = seat.seat_number[0];
+                if (!rows[row]) rows[row] = [];
+                rows[row].push(seat);
+            });
+
+            let seatsHTML = '';
+            Object.keys(rows).sort().forEach(row => {
+                seatsHTML += `<div style="margin-bottom: 1rem;">
+                    <div style="margin-bottom: 0.5rem; color: var(--text-secondary);">Row ${row}</div>
+                    <div style="display: grid; grid-template-columns: repeat(10, 1fr); gap: 0.5rem;">`;
+                
+                rows[row].forEach(seat => {
+                    const seatClass = seat.is_available ? '' : 'booked';
+                    seatsHTML += `
+                        <div class="seat ${seatClass}" onclick="toggleSeat(${seat.seat_id}, '${seat.seat_number}', ${seat.is_available})">
+                            ${seat.seat_number}
+                        </div>`;
+                });
+                seatsHTML += '</div></div>';
+            });
+
+            const container = document.getElementById('seats-container');
+            container.innerHTML = `
+                <div class="seat-selection">
+                    <h3 style="color: var(--accent); margin-bottom: 1rem;">🪑 Select Seats</h3>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-box available"></div>
+                            <span>Available</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-box selected"></div>
+                            <span>Selected</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-box booked"></div>
+                            <span>Booked</span>
+                        </div>
+                    </div>
+                    <div class="seat-grid" style="max-width: 100%; display: block;">
+                        ${seatsHTML}
+                    </div>
+                    
+                    <div class="booking-summary">
+                        <div class="summary-item">
+                            <span>Selected Seats:</span>
+                            <span id="selected-count">0</span>
+                        </div>
+                        <div class="summary-item">
+                            <span>Ticket Price:</span>
+                            <span>₹${price}</span>
+                        </div>
+                        <div class="summary-total">
+                            Total: ₹<span id="total-price">0</span>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" onclick="confirmBooking()" style="width: 100%; margin-top: 2rem;">
+                        💳 Confirm Booking
+                    </button>
+                </div>
+            `;
+
+            showTab('seats');
+        }
+
+        function toggleSeat(seatId, seatNum, available) {
+            if (!available) return;
+
+            const index = selectedSeats.findIndex(s => s.seat_id === seatId);
+            if (index > -1) {
+                selectedSeats.splice(index, 1);
+            } else {
+                selectedSeats.push({ seat_id: seatId, seat_number: seatNum });
+            }
+
+            updateSeatUI();
+        }
+
+        function updateSeatUI() {
+            const container = document.getElementById('seats-container');
+            const seats = container.querySelectorAll('.seat:not(.booked)');
+            
+            seats.forEach(seat => {
+                const seatNum = seat.textContent;
+                const isSelected = selectedSeats.some(s => s.seat_number === seatNum);
+                seat.classList.toggle('selected', isSelected);
+            });
+
+            document.getElementById('selected-count').textContent = selectedSeats.length;
+            document.getElementById('total-price').textContent = selectedSeats.length * currentShow.price;
+        }
+
+        async function confirmBooking() {
+            if (selectedSeats.length === 0) {
+                showAlert('Please select at least one seat', 'error');
+                return;
+            }
+
+            const booking = {
+                user_id: userId,
+                show_id: currentShow.show_id,
+                seat_ids: selectedSeats.map(s => s.seat_id)
+            };
+
+            const result = await api('/bookings', 'POST', booking);
+            if (result) {
+                showAlert(`✅ Booking confirmed! Booking IDs: ${result.booking_ids.join(', ')}`, 'success');
+                setTimeout(() => {
+                    showTab('my-bookings');
+                    loadBookings();
+                }, 2000);
+            }
+        }
+
+        async function loadBookings() {
+            const bookings = await api(`/bookings/user/${userId}`);
+            if (!bookings || bookings.length === 0) {
+                document.getElementById('bookings-container').innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: var(--text-secondary);">
+                        <p>📭 No bookings yet</p>
+                    </div>`;
+                return;
+            }
+
+            document.getElementById('bookings-container').innerHTML = bookings.map(b => `
+                <div class="booking-item">
+                    <div class="booking-details">
+                        <div class="booking-header">${b.title}</div>
+                        <div class="booking-info">Theater: ${b.theater_name}</div>
+                        <div class="booking-info">Show: ${formatDate(b.show_date)} at ${b.show_time}</div>
+                        <div class="booking-info">Seat: ${b.seat_number}</div>
+                        <div class="booking-info" style="color: ${b.status === 'confirmed' ? 'var(--success)' : '#ef4444'};">
+                            Status: ${b.status.toUpperCase()}
+                        </div>
+                    </div>
+                    <div>
+                        ${b.status === 'confirmed' ? `
+                            <button class="btn btn-danger" onclick="cancelBooking(${b.booking_id})">Cancel</button>
+                            <button class="btn btn-primary btn-small" onclick="openFeedback(${b.movie_id})" style="display: block; margin-top: 0.5rem;">
+                                Rate
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function cancelBooking(bookingId) {
+            if (!confirm('Are you sure you want to cancel this booking?')) return;
+            const result = await api(`/bookings/${bookingId}`, 'DELETE');
+            if (result) {
+                showAlert('Booking cancelled successfully', 'success');
+                loadBookings();
+            }
+        }
+
+        function openFeedback(movieId) {
+            document.getElementById('feedback-modal').classList.add('active');
+            document.getElementById('feedback-modal').dataset.movieId = movieId;
+            generateStars();
+        }
+
+        function closeFeedbackModal() {
+            document.getElementById('feedback-modal').classList.remove('active');
+        }
+
+        function generateStars() {
+            const container = document.getElementById('rating-stars');
+            container.innerHTML = Array.from({length: 5}, (_, i) => `
+                <span class="star" onclick="setRating(${i + 1})" data-rating="${i + 1}">★</span>
+            `).join('');
+        }
+
+        function setRating(rating) {
+            document.getElementById('rating').value = rating;
+            document.querySelectorAll('.star').forEach((star, i) => {
+                star.classList.toggle('active', i < rating);
+            });
+        }
+
+        async function submitFeedback(e) {
+            e.preventDefault();
+            const movieId = document.getElementById('feedback-modal').dataset.movieId;
+            const rating = parseInt(document.getElementById('rating').value);
+            const comments = document.getElementById('feedback-comments').value;
+
+            if (rating === 0) {
+                showAlert('Please select a rating', 'error');
+                return;
+            }
+
+            const result = await api('/feedback', 'POST', {
+                user_id: userId,
+                movie_id: movieId,
+                rating,
+                comments
+            });
+
+            if (result) {
+                showAlert('Thank you for your feedback!', 'success');
+                closeFeedbackModal();
+            }
+        }
+
+        function backToMovies() {
+            showTab('movies');
+        }
+
+        function backToShows() {
+            showTab('shows');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadMovies();
+        });
+    </script>
+</body>
+</html>
